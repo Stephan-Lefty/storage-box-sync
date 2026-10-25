@@ -2,18 +2,9 @@
 
 ## Sofort
 
-- [ ] Erster Lauf gegen die echte Box:
-  ```
-  pamac install rclone python-pyqt6
-  pipx install --system-site-packages ~/Github/storage-box-sync
-  storage-box-sync einrichten
-  storage-box-sync pruefen
-  storage-box-sync grundlauf --probelauf    # UNBEDINGT zuerst ansehen
-  storage-box-sync grundlauf
-  ```
-- [ ] Autostart des Symbols einrichten:
-  `cp packaging/storage-box-sync-symbol.desktop ~/.config/autostart/`
-- [ ] Altes Bash-Werkzeug entfernen: `~/.local/bin/storagebox-sync`
+- [x] Erster Lauf gegen die echte Box (25.10.2026, Port 22)
+- [x] Autostart des Symbols eingerichtet
+- [x] Altes Bash-Werkzeug entfernt
 - [ ] Anwendungspasswort `dialos.org / ClaudIA` widerrufen (stand im Klartext im Chat)
 
 ## Demnächst
