@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "storage-box-sync"
+version = "0.1.0"
+description = "Zweiweg-Abgleich zwischen einem Ordner und einer Hetzner Storage Box - über mehrere Rechner, auf Linux, Windows und macOS"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Stephan Rösner" }]
+keywords = ["hetzner", "storage-box", "rclone", "bisync", "sync", "backup"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Environment :: X11 Applications :: Qt",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: German",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: MacOS",
+  "Programming Language :: Python :: 3",
+  "Topic :: System :: Archiving :: Mirroring",
+]
+dependencies = []
+
+[project.optional-dependencies]
+fenster = ["PyQt6>=6.5"]
+entwicklung = ["pytest>=7.4"]
+
+[project.scripts]
+storage-box-sync = "storage_box_sync.cli:main"
+
+[project.gui-scripts]
+storage-box-sync-fenster = "storage_box_sync.cli:nur_fenster"
+storage-box-sync-symbol = "storage_box_sync.cli:nur_symbol"
+
+[project.urls]
+Quellcode = "https://github.com/DEIN-KONTO/storage-box-sync"
+Fehler = "https://github.com/DEIN-KONTO/storage-box-sync/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

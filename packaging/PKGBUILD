@@ -1,0 +1,35 @@
+# Maintainer: Stephan Rösner
+pkgname=storage-box-sync
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Zweiweg-Abgleich zwischen einem Ordner und einer Hetzner Storage Box"
+arch=('any')
+url="https://github.com/DEIN-KONTO/storage-box-sync"
+license=('MIT')
+depends=('python' 'rclone')
+optdepends=('python-pyqt6: Einstellungsfenster und Statussymbol')
+makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
+checkdepends=('python-pytest')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "$pkgname-$pkgver"
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  PYTHONPATH=src python -m pytest
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  install -Dm644 packaging/storage-box-sync.desktop \
+    "$pkgdir/usr/share/applications/storage-box-sync.desktop"
+  install -Dm644 packaging/storage-box-sync-symbol.desktop \
+    "$pkgdir/usr/share/applications/storage-box-sync-symbol.desktop"
+}

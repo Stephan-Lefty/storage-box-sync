@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Storage Box – Statussymbol
+Name[en]=Storage Box status icon
+Comment=Zeigt den Abgleich mit der Hetzner Storage Box in der Kontrollleiste
+Exec=storage-box-sync-symbol
+Icon=folder-cloud
+Terminal=false
+Categories=Utility;FileTools;
+X-GNOME-Autostart-enabled=true
+X-KDE-autostart-after=panel
