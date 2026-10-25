@@ -38,8 +38,8 @@ storage-box-sync-fenster = "storage_box_sync.cli:nur_fenster"
 storage-box-sync-symbol = "storage_box_sync.cli:nur_symbol"
 
 [project.urls]
-Quellcode = "https://github.com/DEIN-KONTO/storage-box-sync"
-Fehler = "https://github.com/DEIN-KONTO/storage-box-sync/issues"
+Quellcode = "https://github.com/Stephan-Lefty/storage-box-sync"
+Fehler = "https://github.com/Stephan-Lefty/storage-box-sync/issues"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

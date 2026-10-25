@@ -56,10 +56,10 @@ sudo apt install rclone         # Debian, Ubuntu
 brew install rclone             # macOS
 
 # dann das Tool, am saubersten mit pipx
-pipx install "git+https://github.com/DEIN-KONTO/storage-box-sync.git[fenster]"
+pipx install "git+https://github.com/Stephan-Lefty/storage-box-sync.git[fenster]"
 
 # oder ohne pipx
-pip install --user "git+https://github.com/DEIN-KONTO/storage-box-sync.git[fenster]"
+pip install --user "git+https://github.com/Stephan-Lefty/storage-box-sync.git[fenster]"
 ```
 
 Auf Arch und Manjaro ist PyQt6 über die Paketverwaltung besser aufgehoben als
@@ -67,7 +67,7 @@ Auf Arch und Manjaro ist PyQt6 über die Paketverwaltung besser aufgehoben als
 
 ```bash
 pamac install python-pyqt6
-pipx install --system-site-packages git+https://github.com/DEIN-KONTO/storage-box-sync.git
+pipx install --system-site-packages git+https://github.com/Stephan-Lefty/storage-box-sync.git
 ```
 
 Im Ordner `packaging/` liegt eine `PKGBUILD` für ein eigenes Arch-Paket.
@@ -78,7 +78,7 @@ Im Ordner `packaging/` liegt eine `PKGBUILD` für ein eigenes Arch-Paket.
 winget install Rclone.Rclone
 winget install Python.Python.3.12
 
-pip install "git+https://github.com/DEIN-KONTO/storage-box-sync.git[fenster]"
+pip install "git+https://github.com/Stephan-Lefty/storage-box-sync.git[fenster]"
 ```
 
 Danach stehen `storage-box-sync` (Kommandozeile),
@@ -88,7 +88,7 @@ zur Verfügung.
 ### Aus dem geklonten Quellcode
 
 ```bash
-git clone https://github.com/DEIN-KONTO/storage-box-sync.git
+git clone https://github.com/Stephan-Lefty/storage-box-sync.git
 cd storage-box-sync
 pip install -e ".[fenster,entwicklung]"
 pytest
