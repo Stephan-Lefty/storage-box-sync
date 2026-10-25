@@ -4,6 +4,6 @@ Name=Storage Box – Abgleich
 Name[en]=Storage Box sync
 Comment=Einstellungen und Abgleich für die Hetzner Storage Box
 Exec=storage-box-sync-fenster
-Icon=folder-cloud
+Icon=storage-box-sync
 Terminal=false
 Categories=Utility;FileTools;

@@ -32,4 +32,8 @@ package() {
     "$pkgdir/usr/share/applications/storage-box-sync.desktop"
   install -Dm644 packaging/storage-box-sync-symbol.desktop \
     "$pkgdir/usr/share/applications/storage-box-sync-symbol.desktop"
+  for groesse in 16 32 48 64 128 256 512; do
+    install -Dm644 "assets/icon-${groesse}.png" \
+      "$pkgdir/usr/share/icons/hicolor/${groesse}x${groesse}/apps/storage-box-sync.png"
+  done
 }

@@ -1,3 +1,9 @@
+[Änderungsprotokoll](CHANGELOG.md) | [TODO](TODO.md)
+
+<p align="center">
+  <img src="assets/icon-256.png" alt="storage-box-sync" width="140">
+</p>
+
 # storage-box-sync
 
 Hält einen Ordner auf dem Rechner und eine **Hetzner Storage Box** in beide
