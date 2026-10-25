@@ -156,9 +156,9 @@ def schreibe_rclone_konfig(e: Einstellungen) -> Path:
         f"host = {e.host}",
         f"user = {e.benutzer}",
         f"port = {e.port}",
-        "shell_type = unix",
-        "md5sum_command = md5 -r",
-        "sha1sum_command = sha1 -r",
+        "shell_type = none",
+        "md5sum_command = none",
+        "sha1sum_command = none",
     ]
     if e.schluesseldatei:
         zeilen.append(f"key_file = {e.schluesseldatei}")
