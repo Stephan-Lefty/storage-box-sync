@@ -17,7 +17,7 @@ def aufrufe(monkeypatch):
     return mitschrift
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="systemd gibt es nur unter Linux")
+@pytest.mark.skipif(sys.platform != "linux", reason="systemd gibt es nur unter Linux")
 def test_systemd_einheiten_werden_geschrieben(einstellungen, aufrufe, eigene_ablage):
     from storage_box_sync import schedule
 
@@ -39,7 +39,7 @@ def test_systemd_einheiten_werden_geschrieben(einstellungen, aufrufe, eigene_abl
     assert any("Zeitplan" in m for m in meldungen)
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="systemd gibt es nur unter Linux")
+@pytest.mark.skipif(sys.platform != "linux", reason="systemd gibt es nur unter Linux")
 def test_nur_stuendlich_ohne_startausloeser(einstellungen, aufrufe, eigene_ablage):
     from storage_box_sync import schedule
 
@@ -50,7 +50,7 @@ def test_nur_stuendlich_ohne_startausloeser(einstellungen, aufrufe, eigene_ablag
     assert "OnUnitActiveSec=1h" in timer
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="systemd gibt es nur unter Linux")
+@pytest.mark.skipif(sys.platform != "linux", reason="systemd gibt es nur unter Linux")
 def test_entfernen_raeumt_auf(einstellungen, aufrufe, eigene_ablage):
     from storage_box_sync import schedule
 
@@ -59,6 +59,39 @@ def test_entfernen_raeumt_auf(einstellungen, aufrufe, eigene_ablage):
     ordner = schedule._systemd_ordner()
     assert not (ordner / "storage-box-sync.timer").exists()
     assert not (ordner / "storage-box-sync.service").exists()
+
+
+def test_macos_plist_wird_geschrieben(einstellungen, aufrufe, monkeypatch):
+    from storage_box_sync import schedule
+
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(
+        schedule, "befehl_fuer_zeitplan",
+        lambda fenster=False: ["/usr/local/bin/storage-box-sync", "abgleich", "--still"],
+    )
+    meldungen = schedule.einrichten(einstellungen)
+
+    plist = schedule._mac_plist()
+    assert plist.exists()
+    inhalt = plist.read_text(encoding="utf-8")
+    assert "de.storage-box-sync" in inhalt
+    assert "/usr/local/bin/storage-box-sync" in inhalt
+    assert "abgleich" in inhalt
+    assert "<true/>" in inhalt
+    assert meldungen
+
+
+def test_macos_plist_entfernen(einstellungen, aufrufe, monkeypatch):
+    from storage_box_sync import schedule
+
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(
+        schedule, "befehl_fuer_zeitplan",
+        lambda fenster=False: ["/usr/local/bin/storage-box-sync", "abgleich", "--still"],
+    )
+    schedule.einrichten(einstellungen)
+    schedule.entfernen()
+    assert not schedule._mac_plist().exists()
 
 
 def test_windows_aufgaben(einstellungen, aufrufe, monkeypatch):
