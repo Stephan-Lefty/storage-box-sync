@@ -47,16 +47,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
       - name: Abhängigkeiten installieren
         run: |
           sudo apt-get update -q
-          sudo apt-get install -y python3-stdeb dh-python
-          pip install setuptools
-          pip install -e .
+          sudo apt-get install -y python3-stdeb python3-setuptools dh-python
 
       - name: .deb bauen
         run: python3 setup.py --command-packages=stdeb.command bdist_deb
