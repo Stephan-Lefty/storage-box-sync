@@ -32,7 +32,8 @@ class StatusNotifierItem(dbus.service.Object):
         self._on_activate = on_activate
         self._on_context = on_context
         self._icon = "folder-cloud"
-        self._tooltip = "Storage Box"
+        self._titel = "Storage Box"
+        self._koerper = ""
         self._status = "Active"
 
         # GLib-Mainloop an den Bus binden, ohne Qt's eigenen Loop zu stören
@@ -99,7 +100,7 @@ class StatusNotifierItem(dbus.service.Object):
             "OverlayIconName":     dbus.String(""),
             "OverlayIconPixmap":   leer,
             "ToolTip": dbus.Struct(
-                (dbus.String(""), leer, dbus.String("Storage Box"), dbus.String(self._tooltip)),
+                (dbus.String(""), leer, dbus.String(self._titel), dbus.String(self._koerper)),
                 signature="sa(iiay)ss",
             ),
             "ItemIsMenu": dbus.Boolean(False),
@@ -107,8 +108,9 @@ class StatusNotifierItem(dbus.service.Object):
 
     # ── Helfer ──────────────────────────────────────────────────────────
 
-    def aktualisiere(self, icon: str, tooltip: str) -> None:
+    def aktualisiere(self, icon: str, titel: str, koerper: str) -> None:
         self._icon = icon
-        self._tooltip = tooltip
+        self._titel = titel
+        self._koerper = koerper
         self.NewIcon()
         self.NewToolTip()

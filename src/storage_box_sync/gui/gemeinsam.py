@@ -23,6 +23,15 @@ FARBEN = {
     "uneingerichtet": "#616161",
 }
 
+FARB_ERKLAERUNG = {
+    "gut": "Grün – letzter Abgleich erfolgreich",
+    "laeuft": "Blau – Abgleich läuft gerade",
+    "veraltet": "Gelb – seit über 26 Stunden kein Abgleich",
+    "fehler": "Rot – letzter Lauf fehlgeschlagen oder Laufwerk nicht eingehängt",
+    "unbekannt": "Grau – noch kein Abgleich gelaufen",
+    "uneingerichtet": "Grau – noch nicht eingerichtet",
+}
+
 SYMBOLNAMEN = {
     "gut": ["vcs-normal", "emblem-success", "dialog-ok-apply"],
     "laeuft": ["vcs-update-required", "emblem-synchronizing", "view-refresh"],

@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import QApplication, QMenu, QMessageBox, QSystemTrayIcon
 
 from .. import config as konfig_modul
 from .. import state, sync
-from .gemeinsam import SYMBOLNAMEN, Laeufer, lade_einstellungen, oeffne, symbol_fuer
+from .gemeinsam import FARB_ERKLAERUNG, SYMBOLNAMEN, Laeufer, lade_einstellungen, oeffne, symbol_fuer
 
 TAKT_MS = 20_000
 
@@ -148,14 +148,20 @@ class Anzeige:
 
     def aktualisiere(self) -> None:
         z = state.ermittle()
-        tooltip = "Storage Box — " + z.als_text()
+        erklaerung = FARB_ERKLAERUNG.get(z.stufe, "")
+        koerper = "\n".join(filter(None, z.lang))
+        if erklaerung:
+            koerper += ("\n\n" if koerper else "") + erklaerung
 
         if sys.platform == "linux":
             icon_name = SYMBOLNAMEN.get(z.stufe, SYMBOLNAMEN["unbekannt"])[0]
-            self._sni.aktualisiere(icon_name, tooltip)
+            self._sni.aktualisiere(icon_name, "Storage Box — " + z.kurz, koerper)
         else:
             self.symbol.setIcon(symbol_fuer(z.stufe))
-            self.symbol.setToolTip(tooltip)
+            qt_tooltip = "Storage Box — " + z.als_text()
+            if erklaerung:
+                qt_tooltip += "\n\n" + erklaerung
+            self.symbol.setToolTip(qt_tooltip)
             if z.stufe == "fehler" and self.letzte_stufe not in (None, "fehler"):
                 self.symbol.showMessage(
                     "Storage Box", z.kurz,
