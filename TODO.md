@@ -10,6 +10,7 @@
 
 ## Demnächst
 
+- [ ] Windows EXE und Debian .deb: CI läuft beim nächsten Tag-Push
 - [ ] Zweiter Rechner (Windows): `--rechnername windows-buero`, dann `grundlauf`
 - [ ] Prüfen ob `--sftp-concurrency 2` mit bisync angenommen wird
 - [ ] Verhalten von `--conflict-suffix` mit zwei Werten in der Praxis ansehen

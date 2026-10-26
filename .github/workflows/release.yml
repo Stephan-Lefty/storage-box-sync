@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+
+  # ── Windows EXE ──────────────────────────────────────────────────────────
+  windows-exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          pip install pyinstaller PyQt6
+          pip install -e .
+
+      - name: EXEs bauen
+        run: |
+          pyinstaller --onefile --name storage-box-sync packaging/build_exe_main.py
+          pyinstaller --onefile --windowed --exclude-module dbus --name storage-box-sync-fenster packaging/build_exe_fenster.py
+          pyinstaller --onefile --windowed --exclude-module dbus --name storage-box-sync-symbol packaging/build_exe_symbol.py
+
+      - name: ZIP erstellen
+        shell: pwsh
+        run: |
+          Compress-Archive `
+            -Path dist/storage-box-sync.exe,dist/storage-box-sync-fenster.exe,dist/storage-box-sync-symbol.exe `
+            -DestinationPath "storage-box-sync-${{ github.ref_name }}-windows.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-zip
+          path: storage-box-sync-*-windows.zip
+
+  # ── Debian .deb ──────────────────────────────────────────────────────────
+  debian-deb:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y python3-stdeb dh-python
+          pip install -e .
+
+      - name: .deb bauen
+        run: python3 setup.py --command-packages=stdeb.command bdist_deb
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debian-deb
+          path: deb_dist/*.deb
+
+  # ── Hochladen an die GitHub-Release ──────────────────────────────────────
+  release-upload:
+    needs: [windows-exe, debian-deb]
+    if: ${{ github.ref_type == 'tag' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-zip
+          path: artifacts/
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: debian-deb
+          path: artifacts/
+
+      - name: Dateien hochladen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.ref_name }}" artifacts/* \
+            --repo "${{ github.repository }}" \
+            --clobber
