@@ -193,7 +193,9 @@ details and the log.
 Auto-start:
 
 * **Linux (KDE, GNOME, XFCE):** copy `packaging/storage-box-sync-symbol.desktop`
-  to `~/.config/autostart/`.
+  to `~/.config/autostart/`. The file launches the icon via a shell wrapper;
+  for a system-wide install (e.g. `.deb`) use `Exec=storage-box-sync-symbol`
+  directly instead.
 * **Windows:** place a shortcut to `storage-box-sync-symbol.exe` in
   `shell:startup`.
 

@@ -197,7 +197,9 @@ Einzelheiten und Protokoll.
 Automatisch mitstarten:
 
 * **Linux (KDE, GNOME, XFCE):** `packaging/storage-box-sync-symbol.desktop`
-  nach `~/.config/autostart/` kopieren.
+  nach `~/.config/autostart/` kopieren. Die Datei startet das Symbol über einen
+  Shell-Wrapper; bei einer Installation nach `/usr/bin` (z. B. `.deb`) stattdessen
+  `Exec=storage-box-sync-symbol` direkt eintragen.
 * **Windows:** Verknüpfung auf `storage-box-sync-symbol.exe` in
   `shell:startup` legen.
 
