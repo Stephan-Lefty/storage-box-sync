@@ -47,18 +47,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Abhängigkeiten installieren
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y python3-stdeb python3-setuptools dh-python
-
       - name: .deb bauen
-        run: python3 setup.py --command-packages=stdeb.command bdist_deb
+        run: |
+          set -e
+          python3 -m venv venv
+          venv/bin/pip install --quiet .
+          VERSION=$(venv/bin/python3 -c "from storage_box_sync import __version__; print(__version__)")
+          PYVER=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+          PKG=deb_pkg
+          mkdir -p "${PKG}/usr/bin" "${PKG}/usr/lib/python3/dist-packages" "${PKG}/DEBIAN"
+          cp -r "venv/lib/python${PYVER}/site-packages/storage_box_sync" "${PKG}/usr/lib/python3/dist-packages/"
+          find "venv/lib/python${PYVER}/site-packages/" -maxdepth 1 -name 'storage_box_sync*.dist-info' \
+            -exec cp -r {} "${PKG}/usr/lib/python3/dist-packages/" \;
+          for script in storage-box-sync storage-box-sync-fenster storage-box-sync-symbol; do
+            sed 's|^#!.*|#!/usr/bin/python3|' "venv/bin/${script}" > "${PKG}/usr/bin/${script}"
+            chmod 755 "${PKG}/usr/bin/${script}"
+          done
+          {
+            echo "Package: storage-box-sync"
+            echo "Version: ${VERSION}"
+            echo "Section: utils"
+            echo "Priority: optional"
+            echo "Architecture: all"
+            echo "Maintainer: Stephan Roesner <stephan.roesner@protonmail.com>"
+            echo "Depends: python3 (>= 3.9), python3-dbus, python3-gi, gir1.2-glib-2.0"
+            echo "Recommends: python3-pyqt6, rclone"
+            echo "Description: Zweiweg-Abgleich zwischen einem Ordner und einer Hetzner Storage Box"
+            echo " Haelt einen Ordner auf dem Rechner und eine Hetzner Storage Box"
+            echo " in beide Richtungen abgeglichen."
+          } > "${PKG}/DEBIAN/control"
+          dpkg-deb --build --root-owner-group "${PKG}" "storage-box-sync_${VERSION}_all.deb"
 
       - uses: actions/upload-artifact@v4
         with:
           name: debian-deb
-          path: deb_dist/*.deb
+          path: storage-box-sync_*.deb
 
   # ── Hochladen an die GitHub-Release ──────────────────────────────────────
   release-upload:
