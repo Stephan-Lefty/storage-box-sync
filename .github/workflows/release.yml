@@ -55,6 +55,7 @@ jobs:
         run: |
           sudo apt-get update -q
           sudo apt-get install -y python3-stdeb dh-python
+          pip install setuptools
           pip install -e .
 
       - name: .deb bauen
