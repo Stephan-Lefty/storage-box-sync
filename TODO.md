@@ -4,6 +4,7 @@
 
 - [x] Erster Lauf gegen die echte Box (25.10.2026, Port 22)
 - [x] Autostart des Symbols eingerichtet
+- [x] Symbol erscheint in KDE Plasma 6 Wayland (SNI via dbus-python)
 - [x] Altes Bash-Werkzeug entfernt
 - [ ] Anwendungspasswort `dialos.org / ClaudIA` widerrufen (stand im Klartext im Chat)
 
