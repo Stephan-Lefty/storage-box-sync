@@ -1,4 +1,4 @@
-[Änderungsprotokoll](CHANGELOG.md) | [Releases](https://github.com/Stephan-Lefty/storage-box-sync/releases) | [TODO](TODO.md)
+[Änderungsprotokoll](CHANGELOG.md) | [Releases](https://github.com/Stephan-Lefty/storage-box-sync/releases) | [TODO](TODO.md) | [🇬🇧 English](README.en.md)
 
 <p align="center">
   <img src="assets/icon-256.png" alt="storage-box-sync" width="140">
