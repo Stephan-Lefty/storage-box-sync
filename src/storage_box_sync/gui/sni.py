@@ -6,6 +6,7 @@ Qt auf Linux nutzt GLib als Event-Loop-Unterbau, daher kein eigener Thread nöti
 
 from __future__ import annotations
 
+import math
 import os
 from typing import Callable
 
@@ -21,6 +22,39 @@ _WATCHER_IFACE = "org.kde.StatusNotifierWatcher"
 _PROPS_IFACE = "org.freedesktop.DBus.Properties"
 
 
+def _kreis_pixmap(farbe_hex: str, groesse: int = 22) -> dbus.Array:
+    """Gefärbter Kreis als ARGB32-Pixmap für IconPixmap."""
+    farbe = farbe_hex.lstrip("#")
+    r = int(farbe[0:2], 16)
+    g = int(farbe[2:4], 16)
+    b = int(farbe[4:6], 16)
+
+    cx = cy = (groesse - 1) / 2.0
+    radius = groesse / 2.0 - 1.5
+
+    daten = []
+    for y in range(groesse):
+        for x in range(groesse):
+            dist = math.sqrt((x - cx) ** 2 + (y - cy) ** 2)
+            if dist <= radius:
+                a = 255
+            elif dist <= radius + 1.0:
+                a = int(255 * (radius + 1.0 - dist))
+            else:
+                a = 0
+            # ARGB32 big-endian: A R G B als einzelne Bytes
+            daten.extend([a, r, g, b])
+
+    return dbus.Array(
+        [dbus.Struct(
+            (dbus.Int32(groesse), dbus.Int32(groesse),
+             dbus.Array(daten, signature="y")),
+            signature="iiay",
+        )],
+        signature="(iiay)",
+    )
+
+
 class StatusNotifierItem(dbus.service.Object):
     """Tray-Symbol über StatusNotifierItem D-Bus-Protokoll."""
 
@@ -31,7 +65,7 @@ class StatusNotifierItem(dbus.service.Object):
     ) -> None:
         self._on_activate = on_activate
         self._on_context = on_context
-        self._icon = "folder-cloud"
+        self._pixmap = _kreis_pixmap("#616161")
         self._titel = "Storage Box"
         self._koerper = ""
         self._status = "Active"
@@ -93,8 +127,8 @@ class StatusNotifierItem(dbus.service.Object):
             "Id":                  dbus.String("storage-box-sync"),
             "Title":               dbus.String("Storage Box"),
             "Status":              dbus.String(self._status),
-            "IconName":            dbus.String(self._icon),
-            "IconPixmap":          leer,
+            "IconName":            dbus.String(""),
+            "IconPixmap":          self._pixmap,
             "AttentionIconName":   dbus.String(""),
             "AttentionIconPixmap": leer,
             "OverlayIconName":     dbus.String(""),
@@ -108,8 +142,8 @@ class StatusNotifierItem(dbus.service.Object):
 
     # ── Helfer ──────────────────────────────────────────────────────────
 
-    def aktualisiere(self, icon: str, titel: str, koerper: str) -> None:
-        self._icon = icon
+    def aktualisiere(self, farbe: str, titel: str, koerper: str) -> None:
+        self._pixmap = _kreis_pixmap(farbe)
         self._titel = titel
         self._koerper = koerper
         self.NewIcon()
